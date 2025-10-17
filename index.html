@@ -21,12 +21,29 @@
   function dataset() {
     return {
       data: false,
+      
       async fetchData() {
+        const file=document.querySelector("input").files[0];
+        if(!file){
+          window.alert("画像ファイルを選んでください");
+          return;
+        }
+
+        const body =new FormData();
+        body.append("Image",file,file.name);
+        body.append("author","ojk");
+
         const url = 'https://httpbin.org/post';
-        const res = await fetch(url);
+        const res = await fetch(url,{
+          method: "POST",
+          body: body
+        });
+        
         const obj = await res.json();
-        this.data = obj;
         console.log(JSON.stringify(this.data, null, 2));
+
+        const image =obj.files.image;
+        document.querySelector("img").scr=image
       }
     }
   }
